@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+//vertex shader -- Gouraud shading
+
+attribute vec4 vPosition;
+attribute vec4 vNormal;
+
+varying vec4 fColor;
+
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform float shininess;
+
+void
+main()
+{
+    // pos is vertex position in camera coordinates (before projection)
+    vec3 pos = (modelViewMatrix * vPosition).xyz;
+    
+    // vector from vertex position to light source
+    vec3 L;
+    
+    // check for directional light vs. point light source
+    // must normalize the light vector
+    /*code to go here*/
+
+    // the vector from the vertex position to the eye is    	
+    vec3 E = -normalize( pos );
+    
+    // halfway vector
+    /*code to go here*/    
+
+    // Transform vertex normal into eye coordinates    
+    vec3 N = normalize( mat3(modelViewMatrix)*vNormal.xyz);
+
+    // Compute terms in the illumination equation
+    vec4 ambient = ambientProduct;
+    vec4 diffuse;
+    vec4 specular;
+    /*code to go here*/
+
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+    
+    /* define the fColor value to pass on to fragment shader*/
+    //fColor = ;
+    fColor.a = 1.0;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+//fragment shader -- Gouraud Shading
+// nothing to do here :).  Gouraud shading uses the colors defined at the vertices and 
+// interpolates the colors. Thus, the "default" fragment shader is sufficient.
+precision mediump float;
+
+varying vec4 fColor;
+
+void
+main()
+{
+
+    gl_FragColor = fColor;
+
+}
+</script>
+
+
+<script id="vertex-shader-phong" type="x-shader/x-vertex">
+//vertex shader -- Phong shading
+// Phong shading defines the N, L, and E vectors at each vertex, and passes them to the fragment shader
+// other than checking the light point vs. direction values, this code can stay the same
+
+attribute vec4 vPosition;
+attribute vec4 vNormal;
+varying vec3 N, L, E;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+
+
+void main()
+{
+    vec3 pos = (modelViewMatrix * vPosition).xyz;
+
+    
+    // check for directional light vs. point light source
+    // must normalize the light vector
+    vec3 L;
+    L = normalize(lightPosition.xyz - pos);
+
+    
+    E =  -normalize(pos);
+    N = normalize( mat3(modelViewMatrix)*vNormal.xyz);
+
+    float kd = max(dot(L,N), 0.0);
+    vec4 diffuse = kd*diffuseProduct;
+
+    fColor = ambient+diffuse;
+    fColor.a = 1.0;
+
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+    
+}
+</script>
+
+<script id="fragment-shader-phong" type="x-shader/x-fragment">
+//fragment shader -- Phong shading
+
+precision mediump float;
+
+uniform vec4 ambientProduct;
+uniform vec4 diffuseProduct;
+uniform vec4 specularProduct;
+uniform float shininess;
+varying vec3 N, L, E;
+
+void main()
+{    
+    vec4 fColor;
+    
+    //define the Halfway vector    
+    vec3 H;
+
+    // Compute terms in the illumination equation
+    vec4 ambient = ambientProduct;
+    vec4 diffuse;
+    vec4 specular;
+    /*code to go here*/
+
+     /* define the fColor value to set to gl_FragColor*/
+    //fColor = ... ;
+    fColor.a = 1.0;
+
+    gl_FragColor = fColor;
+}
+</script>
+
+
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="spherePoints.js"></script>
+<script type="text/javascript" src="shadedSphere.js"></script>
+
+<body>
+
+<div>
+ subdivisions <input id="slider" type="range"
+ min="2" max="6" step="1" value="3" /><span id="subdivisionsText">3</span>
+</div>
+
+<div>
+    Material Diffuse R <input id="mdrslider" type="range"
+    min="0.0" max="1.0" step=".1" value="0.5"/><span id="mdrtext">0.5</span>
+</div>
+
+<div>
+    Material Diffuse G <input id="mdgslider" type="range"
+    min="0.0" max="1.0" step="0.1" value="0.5"/><span id="mdgtext">0.5</span>
+</div>
+
+<div>
+    Material Diffuse B <input id="mdbslider" type="range"
+    min="0.0" max="1.0" step="0.1" value="0.5"/><span id="mdbtext">0.5</span>
+</div>
+
+
+
+    
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+</html>
