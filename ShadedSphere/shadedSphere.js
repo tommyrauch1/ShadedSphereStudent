@@ -175,6 +175,76 @@ window.onload = function init() {
         init();
     };
 
+
+    //Light properties
+
+
+    document.getElementById("LAR").onchange = function(event) {
+        lightAmbient [0] = event.target.value;
+        document.getElementById("lartext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("LAG").onchange = function(event) {
+        lightAmbient [1] = event.target.value;
+        document.getElementById("lagtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("LAB").onchange = function(event) {
+        lightAmbient [2] = event.target.value;
+        document.getElementById("labtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("LDR").onchange = function(event) {
+        lightDiffuse[0] = event.target.value;
+        document.getElementById("ldrtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("LDG").onchange = function(event) {
+        lightDiffuse[1] = event.target.value;
+        document.getElementById("ldgtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("LDB").onchange = function(event) {
+        lightDiffuse[2] = event.target.value;
+        document.getElementById("ldbtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("LSR").onchange = function(event) {
+        lightSpecular[0] = event.target.value;
+        document.getElementById("lsrtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("LSG").onchange = function(event) {
+        lightSpecular[1] = event.target.value;
+        document.getElementById("lsgtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("LSB").onchange = function(event) {
+        lightSpecular[2] = event.target.value;
+        document.getElementById("lsbtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("phiPos").onchange = function(event) {
+        phi = event.target.value;
+        document.getElementById("phitext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("thetaPos").onchange = function(event) {
+        theta = event.target.value;
+        document.getElementById("thetatext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
  
     lightPosition[0] = radius*Math.sin(theta);
     lightPosition[1] = radius*Math.sin(phi);

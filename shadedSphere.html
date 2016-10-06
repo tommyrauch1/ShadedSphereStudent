@@ -103,12 +103,6 @@ void main()
     E =  -normalize(pos);
     N = normalize( mat3(modelViewMatrix)*vNormal.xyz);
 
-    float kd = max(dot(L,N), 0.0);
-    vec4 diffuse = kd*diffuseProduct;
-
-    fColor = ambient+diffuse;
-    fColor.a = 1.0;
-
     gl_Position = projectionMatrix * modelViewMatrix * vPosition;
     
 }
