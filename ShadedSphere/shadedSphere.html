@@ -2,7 +2,7 @@
 <html>
 
 <script id="vertex-shader" type="x-shader/x-vertex">
-//vertex shader -- Gouraud shading
+//vertex shader -- gourard shading
 
 attribute vec4 vPosition;
 attribute vec4 vNormal;
@@ -23,30 +23,37 @@ main()
     
     // vector from vertex position to light source
     vec3 L;
+    L = normalize(lightPosition.xyz - pos);
     
     // check for directional light vs. point light source
     // must normalize the light vector
-    /*code to go here*/
+    //put code here
 
     // the vector from the vertex position to the eye is    	
     vec3 E = -normalize( pos );
     
     // halfway vector
-    /*code to go here*/    
+    /*code to go here*/ 
+    vec3 H = normalize(L+E);
 
     // Transform vertex normal into eye coordinates    
     vec3 N = normalize( mat3(modelViewMatrix)*vNormal.xyz);
 
+
     // Compute terms in the illumination equation
     vec4 ambient = ambientProduct;
-    vec4 diffuse;
-    vec4 specular;
-    /*code to go here*/
+    float kd = max(dot(L,N), 0.0);
+    vec4 diffuse = kd*diffuseProduct;
+    //calculate specular using equations from class
+    float ks = pow(max(dot(N,H),0.0),shininess);
+    vec4 specular = ks*specularProduct;
 
     gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+
+    
     
     /* define the fColor value to pass on to fragment shader*/
-    //fColor = ;
+    fColor = ambient+diffuse+specular;
     fColor.a = 1.0;
 }
 </script>
@@ -156,18 +163,53 @@ void main()
 </div>
 
 <div>
-    Material Diffuse R <input id="mdrslider" type="range"
+    Material Ambient R <input id="MAR" type="range"
+    min="0.0" max="1.0" step=".1" value="0.5"/><span id="martext">0.5</span>
+</div>
+
+<div>
+    Material Ambient G <input id="MAG" type="range"
+    min="0.0" max="1.0" step="0.1" value="0.5"/><span id="magtext">0.5</span>
+</div>
+
+<div>
+    Material Ambient B <input id="MAB" type="range"
+    min="0.0" max="1.0" step="0.1" value="0.5"/><span id="mabtext">0.5</span>
+</div>
+
+<div>
+    Material Diffuse R <input id="MDR" type="range"
     min="0.0" max="1.0" step=".1" value="0.5"/><span id="mdrtext">0.5</span>
 </div>
 
 <div>
-    Material Diffuse G <input id="mdgslider" type="range"
+    Material Diffuse G <input id="MDG" type="range"
     min="0.0" max="1.0" step="0.1" value="0.5"/><span id="mdgtext">0.5</span>
 </div>
 
 <div>
-    Material Diffuse B <input id="mdbslider" type="range"
+    Material Diffuse B <input id="MDB" type="range"
     min="0.0" max="1.0" step="0.1" value="0.5"/><span id="mdbtext">0.5</span>
+</div>
+
+<div>
+    Material Specular R <input id="MSR" type="range"
+    min="0.0" max="1.0" step=".1" value="0.5"/><span id="msrtext">0.5</span>
+</div>
+
+<div>
+    Material Specular G <input id="MSG" type="range"
+    min="0.0" max="1.0" step=".1" value="0.5"/><span id="msgtext">0.5</span>
+</div>
+
+<div>
+    Material Specular B <input id="MSB" type="range"
+    min="0.0" max="1.0" step=".1" value="0.5"/><span id="msbtext">0.5</span>
+</div>
+
+<div>
+    Shininess <input id="MShiny" type="range"
+    min="2" max="200" step="1" value="20"/><span id="mshinetext">20</span>
 </div>
 
 

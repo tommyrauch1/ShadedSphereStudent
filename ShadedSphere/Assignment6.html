@@ -1,0 +1,288 @@
+<!-- name: Tommy Rauch 
+     date: 
+     description:
+     proposed points:
+ -->
+
+<!DOCTYPE html>
+<html>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+//vertex shader for Gouraud shading here
+attribute vec4 vPosition;
+attribute vec4 vNormal;
+
+varying vec4 fColor;
+
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform float shininess;
+
+void
+main()
+{
+    // pos is vertex position in camera coordinates (before projection)
+    vec3 pos = (modelViewMatrix * vPosition).xyz;
+    
+    // vector from vertex position to light source
+    vec3 L;
+    L = normalize(lightPosition.xyz - pos);
+    
+    // check for directional light vs. point light source
+    // must normalize the light vector
+    //put code here
+
+    // the vector from the vertex position to the eye is        
+    vec3 E = -normalize( pos );
+    
+    // halfway vector
+    /*code to go here*/ 
+    vec3 H = normalize(L+E);
+
+    // Transform vertex normal into eye coordinates    
+    vec3 N = normalize( mat3(modelViewMatrix)*vNormal.xyz);
+
+
+    // Compute terms in the illumination equation
+    vec4 ambient = ambientProduct;
+    float kd = max(dot(L,N), 0.0);
+    vec4 diffuse = kd*diffuseProduct;
+    float ks = pow(max(dot(N,H),0.0),shininess);
+    vec4 specular = ks*specularProduct;
+
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+
+    
+    
+    /* define the fColor value to pass on to fragment shader*/
+    fColor = ambient+diffuse+specular;
+    fColor.a = 1.0;
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+//fragment shader for Gouraud shading here
+precision mediump float;
+
+varying vec4 fColor;
+
+void
+main()
+{
+
+    gl_FragColor = fColor;
+
+}
+</script>
+
+<script id="vertex-shader-phong" type="x-shader/x-vertex">
+//vertex shader for Phong shading here
+attribute vec4 vPosition;
+attribute vec4 vNormal;
+
+varying vec4 fColor;
+
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform float shininess;
+
+void
+main()
+{
+    // pos is vertex position in camera coordinates (before projection)
+    vec3 pos = (modelViewMatrix * vPosition).xyz;
+    
+    // vector from vertex position to light source
+    vec3 L;
+    L = normalize(lightPosition.xyz - pos);
+    
+    // check for directional light vs. point light source
+    // must normalize the light vector
+    //put code here
+
+    // the vector from the vertex position to the eye is        
+    vec3 E = -normalize( pos );
+    
+    // halfway vector
+    /*code to go here*/ 
+    vec3 H = normalize(L+E);
+
+    // Transform vertex normal into eye coordinates    
+    vec3 N = normalize( mat3(modelViewMatrix)*vNormal.xyz);
+
+
+    // Compute terms in the illumination equation
+    vec4 ambient = ambientProduct;
+    float kd = max(dot(L,N), 0.0);
+    vec4 diffuse = kd*diffuseProduct;
+    float ks = pow(max(dot(N,H),0.0),shininess);
+    vec4 specular = ks*specularProduct;
+
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+
+    
+    
+    /* define the fColor value to pass on to fragment shader*/
+    fColor = ambient+diffuse+specular;
+    fColor.a = 1.0;
+}
+</script>
+
+<script id="fragment-shader-phong" type="x-shader/x-fragment">
+//fragment shader for Phong shading here
+attribute vec4 vPosition;
+attribute vec4 vNormal;
+
+varying vec4 fColor;
+
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform float shininess;
+
+void
+main()
+{
+    // pos is vertex position in camera coordinates (before projection)
+    vec3 pos = (modelViewMatrix * vPosition).xyz;
+    
+    // vector from vertex position to light source
+    vec3 L;
+    L = normalize(lightPosition.xyz - pos);
+    
+    // check for directional light vs. point light source
+    // must normalize the light vector
+    //put code here
+
+    // the vector from the vertex position to the eye is        
+    vec3 E = -normalize( pos );
+    
+    // halfway vector
+    /*code to go here*/ 
+    vec3 H = normalize(L+E);
+
+    // Transform vertex normal into eye coordinates    
+    vec3 N = normalize( mat3(modelViewMatrix)*vNormal.xyz);
+
+
+    // Compute terms in the illumination equation
+    vec4 ambient = ambientProduct;
+    float kd = max(dot(L,N), 0.0);
+    vec4 diffuse = kd*diffuseProduct;
+    float ks = pow(max(dot(N,H),0.0),shininess);
+    vec4 specular = ks*specularProduct;
+
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+
+    
+    
+    /* define the fColor value to pass on to fragment shader*/
+    fColor = ambient+diffuse+specular;
+    fColor.a = 1.0;
+}
+</script>
+
+
+
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="spherePoints.js"></script>
+<script type="text/javascript" src="shadedSphere.js"></script> 
+
+<body>
+<div style="border-style: solid; border-width: 1px;
+width:490px; margin:0px; padding:10px; border-radius:0px;
+display: table;">
+  <div style="display: table-row">
+    <div "display: table-cell;">
+      <div>
+        <div>
+            MATERIAL Properties<br>
+            Ambient R <input id="MAR" type="range" 
+            min="0" max="1" step=".01" value="1.0" /><span id="martext">1.0</span><br>
+            Ambient G <input id="MAG" type="range"
+             min="0" max="1" step=".01" value="0.0" /><span id="magtext">0.0</span><br>
+            Ambient B <input id="MAB" type="range"
+             min="0" max="1" step=".01" value="1.0" /><span id="mabtext">1.0</span><br>
+             <p>
+            Diffuse R <input id="MDR" type="range" 
+            min="0" max="1" step=".01" value="1.0" /><span id="mdrtext">1.0</span><br>
+            Diffuse G <input id="MDG" type="range"
+             min="0" max="1" step=".01" value="0.8" /><span id="mdgtext">0.8</span><br>
+            Diffuse B <input id="MDB" type="range"
+             min="0" max="1" step=".01" value="0.0" /><span id="mdbtext">0.0</span><br>
+             <p>
+            Specular R <input id="MSR" type="range" 
+            min="0" max="1" step=".01" value="1.0" /><span id="msrtext">1.0</span><br>
+            Specular G <input id="MSG" type="range"
+             min="0" max="1" step=".01" value="1.0" /><span id="msgtext">1.0</span><br>
+            Specular B <input id="MSB" type="range"
+             min="0" max="1" step=".01" value="1.0" /><span id="msbtext">1.0</span><br>
+            <p>
+            Shininess <input id="MShiny" type="range"
+             min="2" max="200" step="1" value="20" /><span id="mshinetext">20</span><br>
+     
+            <hr width="80%"><p><p>
+        </div>
+        <div>
+          <select id="Controls" size="2">
+              <option value="0">Gouraud Shading</option>
+              <option value="1">Phong Shading</option>
+          </select>
+        </div>
+        <p>
+        <div>
+           subdivisions <input id="slider" type="range"
+           min="2" max="6" step="1" value="3" /><span id="">3</span>
+        </div>
+      </div>
+    </div>
+    <div style="display: table-cell;">
+        <div>
+            LIGHT Properties <br>
+            Ambient R <input id="LAR" type="range" 
+            min="0" max="1" step=".01" value="0.2" /><span id="">0.2</span><br>
+            Ambient G <input id="LAG" type="range"
+             min="0" max="1" step=".01" value="0.2" /><span id="">0.2</span><br>
+            Ambient B <input id="LAB" type="range"
+             min="0" max="1" step=".01" value="0.2" /><span id="">0.2</span><br>
+             <p>
+            Diffuse R <input id="LDR" type="range" 
+            min="0" max="1" step=".01" value="1.0" /><span id="">1.0</span><br>
+            Diffuse G <input id="LDG" type="range"
+             min="0" max="1" step=".01" value="1.0" /><span id="">1.0</span><br>
+            Diffuse B <input id="LDB" type="range"
+             min="0" max="1" step=".01" value="1.0" /><span id="">1.0</span><br>
+             <p>
+            Specular R <input id="LSR" type="range" 
+            min="0" max="1" step=".01" value="1.0" /><span id="">1.0</span><br>
+            Specular G <input id="LSG" type="range"
+             min="0" max="1" step=".01" value="1.0" /><span id="">1.0</span><br>
+            Specular B <input id="LSB" type="range"
+             min="0" max="1" step=".01" value="1.0" /><span id="">1.0</span><br>
+             <hr><p><p>
+             LIGHT Position<br>
+              phi<input id="" type="range"
+               min="-1.5" max="1.5" step=".01" value="0" /><span id="">0.0</span><br>
+              theta<input id="" type="range"
+               min="-1.5" max="1.5" step=".01" value="0" /><span id="">0.0</span><br>
+        </div>
+    </div>
+  </div>
+
+</div>
+<p>
+  
+<canvas id="gl-canvas" width="512" height="512">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+</html>

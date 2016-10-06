@@ -31,6 +31,7 @@ var materialAmbient = vec4( 1.0, 0.0, 1.0, 1.0 );
 var materialDiffuse = vec4( 1.0, 0.8, 0.0, 1.0 );
 var materialSpecular = vec4( 1.0, 1.0, 1.0, 1.0 );
 var materialShininess = 20.0;
+var phongFragmentShading = false;
 
 var modelViewMatrix, projectionMatrix;
 var modelViewMatrixLoc, projectionMatrixLoc;
@@ -54,7 +55,15 @@ window.onload = function init() {
     //
     //  Load shaders and initialize attribute buffers
     //
-    var program = initShaders( gl, "vertex-shader", "fragment-shader" );
+
+    if(phongFragmentShading == true)
+    {
+        var program = initShaders( gl, "vertex-shader-phong", "fragment-shader-phong");
+    }
+    else
+    {
+        var program = initShaders (gl, "vertex-shader", "fragment-shader");
+    }
 
     gl.useProgram( program );
 
@@ -84,12 +93,85 @@ window.onload = function init() {
     modelViewMatrixLoc = gl.getUniformLocation( program, "modelViewMatrix" );
     projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
 
+    document.getElementById("Controls").onClick = function(event){
+        switch(event.target.index)
+        {
+            case 0:
+                phongFragmentShading = false;
+                break;
+            case 1:
+                phongFragmentShading = true;
+                break;
+        }
+        init();
+    }
+
     document.getElementById("slider").onchange = function(event) {
         numTimesToSubdivide = event.target.value;
         index = 0;
         pointsArray = [];
         normalsArray = [];
         document.getElementById("subdivisionsText").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+     document.getElementById("MAR").onchange = function(event) {
+        materialAmbient [0] = event.target.value;
+        document.getElementById("martext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("MAG").onchange = function(event) {
+        materialAmbient [1] = event.target.value;
+        document.getElementById("magtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("MAB").onchange = function(event) {
+        materialAmbient [2] = event.target.value;
+        document.getElementById("mabtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("MDR").onchange = function(event) {
+        materialDiffuse[0] = event.target.value;
+        document.getElementById("mdrtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("MDG").onchange = function(event) {
+        materialDiffuse[1] = event.target.value;
+        document.getElementById("mdgtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("MDB").onchange = function(event) {
+        materialDiffuse[2] = event.target.value;
+        document.getElementById("mdbtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("MSR").onchange = function(event) {
+        materialSpecular[0] = event.target.value;
+        document.getElementById("msrtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("MSG").onchange = function(event) {
+        materialSpecular[1] = event.target.value;
+        document.getElementById("msgtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("MSB").onchange = function(event) {
+        materialSpecular[2] = event.target.value;
+        document.getElementById("msbtext").innerHTML = event.target.value; //update HTML text
+        init();
+    };
+
+    document.getElementById("MShiny").onchange = function(event) {
+        materialShininess = event.target.value;
+        document.getElementById("mshinetext").innerHTML = event.target.value; //update HTML text
         init();
     };
 
