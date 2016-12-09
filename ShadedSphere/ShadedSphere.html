@@ -126,8 +126,8 @@ void main()
     H = normalize(L+E);
     // Compute terms in the illumination equation
     vec4 ambient = ambientProduct;
-    foat Kd = max(dot(L,N),0.0);
-
+    float Kd = max(dot(L,N),0.0);
+    float ks = pow(max(dot(N,H),0.0),shininess);
     vec4 diffuse = Kd*diffuseProduct;
     vec4 specular = ks*specularProduct;
     /* define the fColor value to set to gl_FragColor*/

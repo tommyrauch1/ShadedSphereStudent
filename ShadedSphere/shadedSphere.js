@@ -93,7 +93,7 @@ window.onload = function init() {
     modelViewMatrixLoc = gl.getUniformLocation( program, "modelViewMatrix" );
     projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
 
-    document.getElementById("Controls").onClick = function(event){
+    document.getElementById("Controls").onclick = function(event){
         switch(event.target.index)
         {
             case 0:
